@@ -86,7 +86,7 @@ module JSONAPI
                                                                 include_directives: include_directives)
       end
 
-      if (JSONAPI.configuration.top_level_meta_include_page_count && page_options[:record_count])
+      if (paginator && JSONAPI.configuration.top_level_meta_include_page_count && page_options[:record_count])
         page_options[:page_count] = paginator.calculate_page_count(page_options[:record_count])
       end
 
@@ -158,7 +158,7 @@ module JSONAPI
 
       if ((JSONAPI.configuration.top_level_meta_include_record_count) ||
           (paginator && paginator.class.requires_record_count) ||
-          (JSONAPI.configuration.top_level_meta_include_page_count))
+          (paginator && JSONAPI.configuration.top_level_meta_include_page_count))
         related_resource_records = source_resource.public_send("records_for_" + relationship_type)
         records = resource_klass.filter_records(filters, {},
                                                 related_resource_records)
@@ -166,7 +166,7 @@ module JSONAPI
         record_count = resource_klass.count_records(records)
       end
 
-      if (JSONAPI.configuration.top_level_meta_include_page_count && record_count)
+      if (paginator && JSONAPI.configuration.top_level_meta_include_page_count && record_count)
         page_count = paginator.calculate_page_count(record_count)
       end
 
@@ -181,7 +181,7 @@ module JSONAPI
       opts = {}
       opts.merge!(pagination_params: pagination_params) if JSONAPI.configuration.top_level_links_include_pagination
       opts.merge!(record_count: record_count) if JSONAPI.configuration.top_level_meta_include_record_count
-      opts.merge!(page_count: page_count) if JSONAPI.configuration.top_level_meta_include_page_count
+      opts.merge!(page_count: page_count) if paginator && JSONAPI.configuration.top_level_meta_include_page_count
 
       return JSONAPI::RelatedResourcesOperationResult.new(:ok,
                                                           source_resource,

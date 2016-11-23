@@ -55,7 +55,7 @@ module JSONAPI
           meta[JSONAPI.configuration.top_level_meta_record_count_key] = result.record_count
         end
 
-        if JSONAPI.configuration.top_level_meta_include_page_count && result.respond_to?(:page_count)
+        if JSONAPI.configuration.top_level_meta_include_page_count && result.respond_to?(:page_count) && result.page_count
           meta[JSONAPI.configuration.top_level_meta_page_count_key] = result.page_count
         end
       end
